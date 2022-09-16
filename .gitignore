@@ -2,3 +2,4 @@ geo/config.py
 geo_app/migrations/*
 push.sh
 *\.pyc
+code_validator.now
