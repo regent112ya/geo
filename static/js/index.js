@@ -13,8 +13,6 @@ let csrf = function(){
 };
 
 let get_loc = {
-	_resend: false,
-	_t_get_loc: -1,
 	_lat: null,
 	_lng: null,
 	_clear: function(){
@@ -24,17 +22,31 @@ let get_loc = {
 		$('#result_addrs').html('');
 	},
 	_get_loc: function(){
+		var address = $('#address').val();
+		if (!address.length)
+			return;
+		var data = {
+			csrfmiddlewaretoken: csrf()
+		};
+		if (this._a){
+			this._a = false;
+			data.address = address;
+			$('#result_loc').html('<progress></progress>');
+		} else {
+			data.lat = this._lat;
+			data.lng = this._lng;
+		}
+		if (this._r){
+			this._r = false;
+			data.radius = $('#radius').val();
+			$('#result_addrs').html('<progress></progress>');
+		}
 		action = true;
-		$('#result_loc').html('<progress></progress>');
-		$('#result_addrs').html('<progress></progress>');
 		$.ajax({
 			url: './get_loc',
 			type: 'POST',
 			dataType: 'json',
-			data: {
-				csrfmiddlewaretoken: csrf(),
-				address: $('#address').val()
-			},
+			data: data,
 			success: (json) => {
 				if (this._resend){
 					this._resend = false;
@@ -57,8 +69,9 @@ let get_loc = {
 			}
 		});
 	},
-	aj: function(){
+	aj: function(flag){
 		clearTimeout(this._t_get_loc);
+		this[`_${flag}`] = true;
 		this._t_get_loc = setTimeout(() => {
 			if (action){
 				this._resend = true;
@@ -72,38 +85,4 @@ let get_loc = {
 let change_radius = function(){
 	var radius = $('#radius').val();
 	$('#radius_label').html(`${radius} km`);
-};
-
-let get_addrs = function(){
-	action = true;
-	$('#result_addrs').html('<progress></progress>');
-	$.ajax({
-		url: './get_addrs',
-		type: 'POST',
-		dataType: 'json',
-		data: {
-			csrfmiddlewaretoken: csrf(),
-			lat: get_loc._lat,
-			lng: get_loc._lng,
-		},
-		success: (json) => {
-			if (this._resend){
-				this._resend = false;
-				return get_addrs();
-			}
-			action = false;
-			if (json.fail){
-				this._clear();
-				return alert(json.fail);
-			}
-			$('#result_loc').html(`${json.lat} : ${json.lng}`);
-			this._lat = json.lat;
-			this._lng = json.lng;
-		},
-		error: () => {
-			action = false;
-			this._clear();
-			alert('ERROR');
-		}
-	});
 };
