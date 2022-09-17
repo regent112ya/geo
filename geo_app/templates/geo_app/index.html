@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<input id="address" oninput="get_loc.aj()">
+		<input type="range" min="5" max="50" step="5" id="radius" value="10" oninput="change_radius()" onmouseup="get_addrs()">
+		<label id="radius_label">10 km</label>
+		<div id="result_loc">
+		</div>
+		<div id="result_addrs">
+		</div>
+		<script src="/static/js/jquery-3.4.1.m.js"></script>
+		<script src="/static/js/index.js"></script>
+	</body>
+</html>

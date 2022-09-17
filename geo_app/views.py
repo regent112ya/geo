@@ -3,7 +3,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 
-from get.config import DADATA_TOKEN, DADATA_SECRET
+from geo.config import DADATA_TOKEN, DADATA_SECRET
 from geo.join import initLog
 
 import requests
@@ -37,8 +37,9 @@ def _get_loc(address):
 	if resp.status_code != 200:
 		logging.error(resp.text)
 		raise
+	logging.error(resp.text)
 	res = resp.json()
-	return (res['geo_lat'][0], res['geo_lon'][0]) if res and res[0]['qc_geo'] < 5 else None
+	return (res[0]['geo_lat'], res[0]['geo_lon']) if res and res[0]['qc_geo'] < 5 else None
 
 @ajax
 def get_loc(http_request):
@@ -52,3 +53,6 @@ def get_loc(http_request):
 		'lat': loc[0],
 		'lng': loc[1]
 	}
+
+def index(http_request):
+	return render(http_request, 'geo_app/index.html', {})
