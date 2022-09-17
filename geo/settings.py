@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-from geo.config import SECRET_KEY
+from geo.config import SECRET_KEY, POSTGRES_USER, POSTGRES_PASSW
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -73,10 +73,15 @@ WSGI_APPLICATION = 'geo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': f'{BASE_DIR}/db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'geo_app',
+        'USER': POSTGRES_USER,
+        'PASSWORD': POSTGRES_PASSW,
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 

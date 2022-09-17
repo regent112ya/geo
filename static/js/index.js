@@ -44,7 +44,9 @@ let get_loc = {
 				action = false;
 				if (json.fail){
 					this._clear();
-					return alert(json.fail);
+					if (json.fail !== 'ADDRESS_NULL' && json.fail !== 'ADDRESS_NOTFOUND')
+						alert(json.fail);
+					return;
 				}
 				$('#result_loc').html(`${json.lat} : ${json.lng}`);
 				this._lat = json.lat;

@@ -1,0 +1,5 @@
+# RENAME to "config.py"
+
+SECRET_KEY = <secret key>
+DADATA_TOKEN = <token>
+DADATA_SECRET = <secret>

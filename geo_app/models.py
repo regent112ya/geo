@@ -13,7 +13,7 @@ class Address(models.Model):
 	country = models.ForeignKey('Country', null=True, on_delete=models.SET_NULL)
 	city = models.ForeignKey('City', null=True, on_delete=models.SET_NULL)
 	settlement = models.ForeignKey('Settlement', null=True, on_delete=models.SET_NULL)
-	kladr_id = models.IntegerField()
+	kladr_id = models.BigIntegerField()
 	fias_id = models.TextField()
 	fias_level = models.SmallIntegerField()
 	capital_marker = models.SmallIntegerField()
