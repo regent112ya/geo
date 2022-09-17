@@ -18,5 +18,6 @@ from geo_app import views
 
 urlpatterns = [
 	path('', views.index),
-	path('get_loc', views.get_loc)
+	path('get_loc', views.get_loc),
+	path('get_addrs', views.get_addrs)
 ]

@@ -25,28 +25,17 @@ let get_loc = {
 		var address = $('#address').val();
 		if (!address.length)
 			return;
-		var data = {
-			csrfmiddlewaretoken: csrf()
-		};
-		if (this._a){
-			this._a = false;
-			data.address = address;
-			$('#result_loc').html('<progress></progress>');
-		} else {
-			data.lat = this._lat;
-			data.lng = this._lng;
-		}
-		if (this._r){
-			this._r = false;
-			data.radius = $('#radius').val();
-			$('#result_addrs').html('<progress></progress>');
-		}
+		$('#result_loc').html('<progress></progress>');
+		$('#result_addrs').html('');
 		action = true;
 		$.ajax({
 			url: './get_loc',
 			type: 'POST',
 			dataType: 'json',
-			data: data,
+			data: {
+				csrfmiddlewaretoken: csrf(),
+				address: $('#address').val()
+			},
 			success: (json) => {
 				if (this._resend){
 					this._resend = false;
@@ -69,9 +58,8 @@ let get_loc = {
 			}
 		});
 	},
-	aj: function(flag){
+	aj: function(){
 		clearTimeout(this._t_get_loc);
-		this[`_${flag}`] = true;
 		this._t_get_loc = setTimeout(() => {
 			if (action){
 				this._resend = true;
@@ -85,4 +73,40 @@ let get_loc = {
 let change_radius = function(){
 	var radius = $('#radius').val();
 	$('#radius_label').html(`${radius} km`);
+};
+
+let get_addrs = function(){
+	if (action)
+		return;
+	if (get_loc._lat === null)
+		return;
+	$('#radius').attr('disabled', true);
+	$('#result_addrs').html('<progress></progress>');
+	action = true;
+	$.ajax({
+		url: './get_addrs',
+		type: 'POST',
+		dataType: 'json',
+		data: {
+			csrfmiddlewaretoken: csrf(),
+			lat: get_loc._lat,
+			lng: get_loc._lng,
+			radius: $('#radius').val()
+		},
+		success: (json) => {
+			action = false;
+			$('#radius').removeAttr('disabled');
+			if (json.fail){
+				$('#result_addrs').html('');
+				return alert(json.fail);
+			}
+			$('#result_addrs').html(json.addrs.join('<br>'));
+		},
+		error: () => {
+			action = false;
+			$('#radius').removeAttr('disabled');
+			$('#result_addrs').html('');
+			alert('ERROR');
+		}
+	});
 };
