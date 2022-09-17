@@ -3,3 +3,6 @@ geo_app/migrations/*
 push.sh
 *\.pyc
 code_validator.now
+city.csv
+*\.sqlite3
+logs/*

@@ -31,6 +31,8 @@ if __name__ == '__main__':
 	res = [
 		'geo_app/models.py',
 		'geo_app/views.py',
+		'geo/join.py',
+		'csv_parser.py'
 	]
 	last_start = 0.0
 	try:
